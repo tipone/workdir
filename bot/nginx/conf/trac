@@ -1,0 +1,14 @@
+    location / {
+#        uwsgi_pass  unix:/BUILDBOT/trac/tmp/uwsgi.sock;
+#        include      uwsgi_params;
+        uwsgi_pass  unix:/BUILDBOT/trac/tmp/uwsgi.sock;
+        include      uwsgi_params;
+    }
+
+    location /chrome/common {
+        alias /BUILDBOT/trac/storbox/www/htdocs/common;
+    }
+    location /chrome/site {
+        alias /BUILDBOT/trac/storbox/www/htdocs/site;
+    }
+

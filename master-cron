@@ -1,0 +1,2 @@
+PATH=/usr/sbin:/usr/bin:/sbin:/bin
+@reboot bot  cd /BUILDBOT/tmp/; echo "restart-master" > mstatus &

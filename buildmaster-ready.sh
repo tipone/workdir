@@ -1,0 +1,87 @@
+#!/bin/bash
+# Devops Project -- 2016 kansukse@gmail.com
+# BuildBot Master süreçlerini ayarlar çalışır hale getirir. Debian Jessie üstünde çalışır.
+buildbotdir=/BUILDBOT
+mastername=master
+builddir=$buildbotdir/sandbox
+gitdir=$buildbotdir/git
+tmpdir=$buildbotdir/tmp
+base="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
+pypath="\"\${PYTHONPATH}:$base/bot/lib\""
+sudo apt-get update
+sudo apt-get dist-upgrade -fy
+sudo apt-get install -fy python-dev python-pip git sudo libffi-dev libssl-dev postgresql-client
+
+
+# Projecet PYTHONPATH
+ifpypath=$(cat ~/.bashrc |grep $pypath|wc -l)
+if [ "$ifpypath" == "0"  ];then
+	echo "PYTHONPATH Eklenmemiş. Ekleniyor."
+	echo -e "# Buildbot PYTHONPATH
+	export PYTHONPATH=$pypath
+        " >> ~/.bashrc
+        source ~/.bashrc
+fi
+
+# System Globals
+ifglobals=$(cat ~/.bashrc |grep "# Buildbot Master Globals:"|wc -l)
+if [ "$ifglobals" == "0"  ];then
+	echo "Globaller export edilmemiş. Şimdi export ediliyor."
+	echo -e "# Buildbot Master Globals:
+	export BUILDBOTDIR=$buildbotdir
+	export GITDIR=$gitdir
+	export MASTERNAME=$mastername
+	export BUILDDIR=$builddir
+	export BASE=$base
+	export PGPASSWORD=postgresql_password
+	" >> ~/.bashrc
+	source ~/.bashrc
+fi
+mkdir -p $gitdir $tmpdir
+ln -sf $base/checker.sh $tmpdir/checker.sh
+sudo  cp -f $base/checker-cron /etc/cron.d/checker-cron
+sudo  cp -f $base/master-cron /etc/cron.d/master-cron
+
+
+# tüm repoları burda çek.
+
+if [ ! -d $builddir ];then
+	sudo pip install virtualenv
+	virtualenv --no-site-packages $builddir
+else
+	echo "[info]virtualenv already installed and configured.."
+fi
+
+source $builddir/bin/activate
+
+if [ ! -f $builddir/$mastername/state.sqlite  ];then
+	buildbot upgrade-master $builddir/$mastername
+fi
+
+if [ ! -f $builddir/$mastername/buildbot.tac ];then
+	pip install buildbot buildbot-www buildbot-worker buildbot-waterfall-view buildbot-console-view pyopenssl service_identity
+	buildbot create-master $builddir/$mastername
+	ln -s $base/bot/lib $builddir/$mastername/lib
+	ln -s $base/bot/master.cfg $builddir/$mastername/master.cfg
+	sudo ln -s $base/bot/masterwebbot-cron /etc/cron.d/masterwebbot-cron
+	sudo service cron restart
+else
+	echo "[info]sqlalchey and buildbot-master already installed and configured.."
+fi
+if [ ! -f $builddir/$mastername/twistd.pid ];then
+	buildbot start $builddir/$mastername
+	echo "[warning]builbot-master is not running.. Try starting.."
+else
+	buildbot reconfig $builddir/$mastername
+#	buildbot stop $builddir/$mastername
+#	if [ -f $builddir/$mastername/twistd.pid  ];then
+#		pid=$(cat $builddir/$mastername/twistd.pid)
+#		kill $pid
+#	fi
+#	buildbot start $builddir/$mastername
+	echo "[info]buildbot-master reconfig.. "
+fi
+
+bash bot/scripts/bashsource.sh
+source ~/bashsource
+

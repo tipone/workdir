@@ -1,0 +1,23 @@
+
+# Default server configuration
+#
+
+server {
+
+        listen 8080;
+        server_name master master.ipa.botsoftware.com;
+        charset     utf-8;
+        auth_ldap "Forbidden";
+        auth_ldap_servers ldap1;
+
+	root /var/www/html;
+
+	index index.html index.htm index.nginx-debian.html;
+
+	server_name _;
+
+#	location / {
+#		try_files $uri $uri/ =404;
+#	}
+	include /usr/local/nginx/conf.d/trac;
+}
