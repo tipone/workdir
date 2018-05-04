@@ -8,6 +8,7 @@ sudo apt-get dist-upgrade -fy --force-yes
 # Apache2 Globals
 ifglobals=$(cat ~/.bashrc |grep "# Apache2 Reverse Proxy Globals:"|wc -l)
 if [ "$ifglobals" == "0"  ];then
+#	./nginx-ready.sh
 	echo "Globaller export edilmemiş. Şimdi export ediliyor."
 	echo -e "# Apache2 Reverse Proxy Globals:
 	export A2DIR=/BUILDBOT/workdir/bot/apache2/
@@ -15,22 +16,13 @@ if [ "$ifglobals" == "0"  ];then
 	" >> ~/.bashrc
 	source ~/.bashrc
 
-	sudo apt-get install -fy --force-yes redmine-mysql apache2 libapache2-mod-passenger mariadb-server mariadb-client
-	a2enmod passenger
-	a2ensite redmine.conf
+	sudo apt-get install -fy --force-yes redmine redmine-mysql apache2 libapache2-mod-passenger mariadb-server mariadb-client
+	sudo cp /usr/share/doc/redmine/examples/apache2-passenger-host.conf /etc/apache2/sites-available/redmine.conf
+	sudo rm /etc/apache2/sites-enabled/000-default.conf
+	sudo a2enmod passenger
+	sudo a2ensite redmine.conf
 fi
 
 bash bot/scripts/bashsource.sh
 source ~/bashsource
-sudo mkdir -p /usr/local/apache2/sites-enabled/ /usr/local/apache2/sites-available/ /usr/local/apache2/conf.d/
-sudo rm -r /var/www/html/*
-sudo rm /usr/local/apache2/conf/apache2.conf
-sudo cp $NGINXDIR/apache2.conf /usr/local/apache2/conf/
-sudo cp -r $NGINXDIR/www/* /var/www/html/
-sudo rm /usr/local/apache2/sites-enabled/* 
-sudo cp $NGINXDIR/conf/* /usr/local/apache2/conf.d/
-sudo cp $NGINXDIR/default /usr/local/apache2/sites-enabled/
-
-#sudo service apache2 restart
-sudo pkill apache2
-sudo /usr/local/apache2/sbin/apache2
+sudo service apache2 restart
