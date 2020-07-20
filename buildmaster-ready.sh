@@ -10,7 +10,7 @@ base="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
 pypath="\"\${PYTHONPATH}:$base/bot/lib\""
 sudo apt-get update
 sudo apt-get dist-upgrade -fy
-sudo apt-get install -fy python3-dev python3-pip git sudo libffi-dev libssl-dev postgresql-client
+sudo apt-get install -fy python-dev python-pip git sudo libffi-dev libssl-dev postgresql-client
 
 
 # Projecet PYTHONPATH
@@ -47,14 +47,14 @@ sudo  cp -f $base/master-cron /etc/cron.d/master-cron
 
 if [ ! -d $builddir ];then
 	sudo pip install virtualenv
-	virtualenv $builddir
+	virtualenv --no-site-packages $builddir
 else
 	echo "[info]virtualenv already installed and configured.."
 fi
 
 source $builddir/bin/activate
 
-if [ -f $builddir/$mastername/state.sqlite  ];then
+if [ ! -f $builddir/$mastername/state.sqlite  ];then
 	buildbot upgrade-master $builddir/$mastername
 fi
 
@@ -63,6 +63,7 @@ if [ ! -f $builddir/$mastername/buildbot.tac ];then
 	buildbot create-master $builddir/$mastername
 	ln -s $base/bot/lib $builddir/$mastername/lib
 	ln -s $base/bot/master.cfg $builddir/$mastername/master.cfg
+	sudo ln -s $base/bot/masterwebbot-cron /etc/cron.d/masterwebbot-cron
 	sudo service cron restart
 else
 	echo "[info]sqlalchey and buildbot-master already installed and configured.."
@@ -72,6 +73,12 @@ if [ ! -f $builddir/$mastername/twistd.pid ];then
 	echo "[warning]builbot-master is not running.. Try starting.."
 else
 	buildbot reconfig $builddir/$mastername
+#	buildbot stop $builddir/$mastername
+#	if [ -f $builddir/$mastername/twistd.pid  ];then
+#		pid=$(cat $builddir/$mastername/twistd.pid)
+#		kill $pid
+#	fi
+#	buildbot start $builddir/$mastername
 	echo "[info]buildbot-master reconfig.. "
 fi
 
