@@ -38,3 +38,5 @@ cd /BUILDBOT/workdir
 # Create Worker.
 
 ./buildworker-ready.sh
+
+# Working for new version :)
