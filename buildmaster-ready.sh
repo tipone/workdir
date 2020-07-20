@@ -61,7 +61,7 @@ if [ -f $builddir/$mastername/state.sqlite  ];then
 fi
 
 if [ ! -f $builddir/$mastername/buildbot.tac ];then
-	pip install buildbot buildbot-www buildbot-worker buildbot-waterfall-view buildbot-console-view pyopenssl service_identity
+	pip install buildbot buildbot-www buildbot-worker buildbot-waterfall-view buildbot-console-view buildbot-grid_view pyopenssl service_identity
 	buildbot create-master $builddir/$mastername
 	ln -s $base/bot/lib $builddir/$mastername/lib
 	ln -s $base/bot/master.cfg $builddir/$mastername/master.cfg
