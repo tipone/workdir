@@ -7,7 +7,7 @@ from buildbot.steps import shell, trigger
 
 class Builder:
 	def __init__(self):
-		self.buildername = "kansutest"
+		self.buildername = "bbottest"
 		self.workernames = ["bbmaster-worker"]
 		self.workdir = "/BUILDBOT/workdir"
 		self.masterdir = "/BUILDBOT/sandbox/master"
@@ -18,7 +18,7 @@ class Builder:
 		self.branch='master'
 	def _factory(self):
 		self.factory = util.BuildFactory()		
-		self.factory.addStep(steps.ShellCommand(command=["bash", "kansutest.sh"], workdir=self.scripts))
+		self.factory.addStep(steps.ShellCommand(command=["bash", "bbottest.sh"], workdir=self.scripts))
 	def build(self):
 		self._factory()
 		builder = util.BuilderConfig(name=self.buildername,
