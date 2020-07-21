@@ -54,5 +54,5 @@ class Builder:
 
 if __name__ == "__main__":
 	builder = Builder()
-	print builder.scheduler()
-	print builder.build()
+	print(builder.scheduler())
+	print(builder.build())

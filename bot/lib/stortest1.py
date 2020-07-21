@@ -8,7 +8,7 @@ from buildbot.steps import shell, trigger
 class Builder:
 	def __init__(self):
 		self.buildername = "stortest1"
-		self.workernames = ["stortest1-worker"]
+		self.workernames = ["bbmaster-worker"]
 		self.workdir = "/BUILDBOT/workdir"
 		self.masterdir = "/BUILDBOT/sandbox/master"
 		self.tmpdir = "/BUILDBOT/tmp"
@@ -54,5 +54,5 @@ class Builder:
 
 if __name__ == "__main__":
 	builder = Builder()
-	print builder.scheduler()
-	print builder.build()
+	print(builder.scheduler())
+	print(builder.build())
