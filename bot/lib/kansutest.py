@@ -8,7 +8,7 @@ from buildbot.steps import shell, trigger
 class Builder:
 	def __init__(self):
 		self.buildername = "kansutest"
-		self.workernames = ["kansu-worker"]
+		self.workernames = ["bbmaster-worker"]
 		self.workdir = "/BUILDBOT/workdir"
 		self.masterdir = "/BUILDBOT/sandbox/master"
 		self.tmpdir = "/BUILDBOT/tmp"
