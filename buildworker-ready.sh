@@ -3,9 +3,11 @@
 # Build ve derlemeler için gerekli otomasyon slave`ini kurar
 #preinstall
 # Slave connect to which master server
-masteraddr=master:9989
+# Edit for Python3 -- 2020 -- kansukse@gmail.com
 
-# please edit these two variable, slavename and slavepass
+masteraddr=bbmaster:9989
+
+# please edit these two variable, workername and workerpass
 workername=`hostname -s`-worker
 workerpass=pass
 buildbotdir=/BUILDBOT
@@ -44,7 +46,7 @@ fi
 
 sudo apt-get update
 sudo apt-get dist-upgrade -fy
-sudo apt-get install -fy python-dev python-pip git sudo postgresql-client
+sudo apt-get install -fy python3-dev python3-pip git sudo postgresql-client
 
 mkdir -p $gitdir $tmpdir $reposdir
 ln -sf $base/checker.sh $tmpdir/checker.sh
@@ -58,7 +60,7 @@ sudo  cp -f $base/repos-cron /etc/cron.d/repos-cron
 
 if [ ! -d $builddir ];then
 	sudo pip install virtualenv
-	virtualenv --no-site-packages $builddir
+	virtualenv $builddir
 else
 	echo "[info]virtualenv already installed and configured.."
 fi
