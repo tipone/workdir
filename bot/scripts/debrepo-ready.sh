@@ -28,12 +28,12 @@ deb [arch=amd64,i386] http://ftp.de.debian.org/debian/ experimental main contrib
 deb-src http://ftp.de.debian.org/debian/ experimental main contrib non-free
 
 # Jessie Repos
-deb [arch=amd64,i386] http://ftp.de.debian.org/debian/ jessie main contrib non-free
-deb-src http://ftp.de.debian.org/debian/ jessie main contrib non-free
+deb [arch=amd64,i386] http://ftp.de.debian.org/debian/ bullseye main contrib non-free
+deb-src http://ftp.de.debian.org/debian/ bullseye main contrib non-free
 
 # Wheezy Repos
-deb [arch=amd64,i386] http://ftp.de.debian.org/debian/ wheezy main contrib non-free
-deb-src http://ftp.de.debian.org/debian/ wheezy main contrib non-free
+deb [arch=amd64,i386] http://ftp.de.debian.org/debian/ buster main contrib non-free
+deb-src http://ftp.de.debian.org/debian/ buster main contrib non-free
 "| 
 sudo tee /etc/apt/sources.list > /dev/null
 
@@ -53,12 +53,12 @@ Pin: release a=experimental
 Pin-Priority: 50" | sudo tee /etc/apt/preferences.d/experimental > /dev/null
 
 echo -e "Package: *
-Pin: release a=jessie
-Pin-Priority: 50" | sudo tee /etc/apt/preferences.d/jessie > /dev/null
+Pin: release a=bullseye
+Pin-Priority: 50" | sudo tee /etc/apt/preferences.d/bullseye > /dev/null
 
 echo -e "Package: *
-Pin: release a=wheezy
-Pin-Priority: 50" | sudo tee /etc/apt/preferences.d/wheezy > /dev/null
+Pin: release a=buster
+Pin-Priority: 50" | sudo tee /etc/apt/preferences.d/buster > /dev/null
 
 sudo apt-get update
 
@@ -70,10 +70,10 @@ if [ "$ifglobals" == "0"  ];then
 	echo -e "# Buildbot Debrepo Globals:
 	export DEBREPODIR=$debrepodir
 	export DEBLISTDIR=$BUILDBOTDIR/tmp/deblists
-	export STRETCH=$debrepodir/public/dists/stretch
-	export STRETCHDIST=$debrepodir/public/dists/stretch/main
-	export STRETCHPOOL=$debrepodir/public/pool/main/stretch
-	export STRETCHCACHE=$BUILDBOTDIR/tmp/debcache
+	export TESTING=$debrepodir/public/dists/testing
+	export TESTINGDIST=$debrepodir/public/dists/testing/main
+	export TESTINGPOOL=$debrepodir/public/pool/main/testing
+	export TESTINGCACHE=$BUILDBOTDIR/tmp/debcache
 	export STORREPODIR=$BUILDBOTDIR/tmp/stor
 	export DH_VIRTUALENV_INSTALL_ROOT=/usr/lib/storbox/
 	" >> ~/.bashrc
@@ -97,7 +97,7 @@ sudo chmod 700 -R $BASE/gpg/bot ~/.gnupg
 # bu satır eski versiyonları nasıl sileceğimizi henüş bulamadığımız için
 rm -rf $DEBREPODIR
 
-mkdir -p $STRETCHCACHE $DEBREPODIR $DEBLISTDIR $STORREPODIR
+mkdir -p $TESTINGCACHE $DEBREPODIR $DEBLISTDIR $STORREPODIR
 
 #sudo apt-get install -fy --force-yes apt-transport-https dpkg-dev aptly
 
@@ -133,7 +133,7 @@ echo $snaplist|xargs aptly snapshot merge main-$DATE
 #stor
 ifstor=$(aptly repo list -raw |grep stor|wc -l)
 if [ $ifstor == "0"  ];then
-        aptly repo create -architectures="amd64" -distribution=stretch -component=stor stor
+        aptly repo create -architectures="amd64" -distribution=testing -component=stor stor
 else
         echo "repo stor already added."
 fi
@@ -152,7 +152,7 @@ aptly snapshot create stor-$DATE from repo stor
 ifpublish=$(aptly publish list -raw |wc -l)
 
 if [ "$ifpublish" == "1" ];then
-        aptly publish drop stretch
+        aptly publish drop testing
 fi
 
 aptly publish snapshot -distribution="bot" -component=main,stor main-$DATE stor-$DATE
