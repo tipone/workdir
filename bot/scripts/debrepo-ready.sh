@@ -37,6 +37,7 @@ deb-src http://ftp.de.debian.org/debian/ buster main contrib non-free
 "| 
 sudo tee /etc/apt/sources.list > /dev/null
 
+apt-get instlall -fy wget aptly
 wget -q -O - https://www.mongodb.org/static/pgp/server-3.4.asc | sudo apt-key add -
 
 # Testing harici tüm repoları pinliyoruz.

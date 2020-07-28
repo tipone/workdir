@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # Need to install 'apt-get install python-pymongo'
 # kansukse@gmail.com
 from pprint import pprint
