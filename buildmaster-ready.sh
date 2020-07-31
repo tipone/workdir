@@ -9,7 +9,7 @@ builddir=$buildbotdir/sandbox
 gitdir=$buildbotdir/git
 tmpdir=$buildbotdir/tmp
 base="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
-pypath="\"\${PYTHONPATH}:$base/bot/lib\""
+pypath="\"\${PYTHONPATH}:$base/bot\""
 sudo apt-get update
 sudo apt-get dist-upgrade -fy
 sudo apt-get install -fy python3-dev python3-pip git sudo libffi-dev libssl-dev postgresql-client
