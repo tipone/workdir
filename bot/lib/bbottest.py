@@ -14,7 +14,7 @@ class Builder:
 		self.tmpdir = "/BUILDBOT/tmp"
 		self.scripts = "/BUILDBOT/workdir/bot/scripts"
 		self.gitdir = "/BUILDBOT/git/storbox"
-		self.repourl = "ssh://master:/git/storbox.git"
+		self.repourl = "ssh://git@gitserver:/git/dummy.git"
 		self.branch='master'
 	def _factory(self):
 		self.factory = util.BuildFactory()		
