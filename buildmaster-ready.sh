@@ -12,7 +12,7 @@ base="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
 pypath="\"\${PYTHONPATH}:$base/bot\""
 sudo apt-get update
 sudo apt-get dist-upgrade -fy
-sudo apt-get install -fy python3-dev python3-pip git sudo libffi-dev libssl-dev postgresql-client virtualenv
+sudo apt-get install -fy python3-dev python3-pip git sudo libffi-dev libssl-dev postgresql-client
 
 
 # Projecet PYTHONPATH
@@ -48,7 +48,7 @@ sudo  cp -f $base/master-cron /etc/cron.d/master-cron
 # tüm repoları burda çek.
 
 if [ ! -d $builddir ];then
-	sudo pip install virtualenv
+	sudo pip3 install virtualenv
 	virtualenv $builddir
 else
 	echo "[info]virtualenv already installed and configured.."
@@ -61,7 +61,7 @@ if [ -f $builddir/$mastername/state.sqlite  ];then
 fi
 
 if [ ! -f $builddir/$mastername/buildbot.tac ];then
-	pip install buildbot buildbot-www buildbot-worker buildbot-waterfall-view buildbot-console-view buildbot-grid_view pyopenssl service_identity
+	pip3 install buildbot buildbot-www buildbot-worker buildbot-waterfall-view buildbot-console-view buildbot-grid_view pyopenssl service_identity
 	buildbot create-master $builddir/$mastername
 	ln -s $base/bot/lib $builddir/$mastername/lib
 	ln -s $base/bot/master.cfg $builddir/$mastername/master.cfg
