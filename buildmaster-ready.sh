@@ -49,7 +49,7 @@ sudo  cp -f $base/master-cron /etc/cron.d/master-cron
 
 if [ ! -d $builddir ];then
 	sudo pip3 install virtualenv
-	virtualenv $builddir
+	virtualenv -p python3 $builddir
 else
 	echo "[info]virtualenv already installed and configured.."
 fi
